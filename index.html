@@ -1,1 +1,153 @@
-<h1>Hello GERD Tracker</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GERD Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe9ec, #e7f5ff);
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      border: 2px solid #ffe5e5;
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a5a5a;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.3rem;
+      font-weight: 500;
+      color: #444;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      font-size: 1rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border: 1px solid #a3d2ca;
+      outline: none;
+    }
+
+    .checkbox-group label {
+      display: block;
+      margin: 0.4rem 0;
+    }
+
+    input[type="submit"] {
+      background: #a3d2ca;
+      color: white;
+      border: none;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    input[type="submit"]:hover {
+      background: #75b9be;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>🌿 Ela's GERD Symptom Tracker</h2>
+    <form id="gerdForm">
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="time">Time</label>
+      <input type="time" id="time" name="time" required>
+
+      <label for="mealType">Meal Type</label>
+      <select id="mealType" name="mealType" required>
+        <option>Breakfast</option>
+        <option>Lunch</option>
+        <option>Dinner</option>
+        <option>Snacks</option>
+      </select>
+
+      <label for="food">Food/Beverage Items</label>
+      <textarea id="food" name="food" rows="2" required></textarea>
+
+      <label for="fullness">How full am I? (1–10)</label>
+      <input type="number" id="fullness" name="fullness" min="1" max="10" required>
+
+      <label>Symptoms (select all that apply)</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="symptoms" value="Burping"> Burping</label>
+        <label><input type="checkbox" name="symptoms" value="Heartburn"> Heartburn</label>
+        <label><input type="checkbox" name="symptoms" value="Bloating"> Bloating</label>
+        <label><input type="checkbox" name="symptoms" value="Nausea"> Nausea</label>
+        <label><input type="checkbox" name="symptoms" value="Reflux"> Reflux</label>
+        <label><input type="checkbox" name="symptoms" value="Stomach pain"> Stomach pain</label>
+      </div>
+
+      <label for="severity">Symptom Severity (1–10)</label>
+      <input type="number" id="severity" name="severity" min="0" max="10" required>
+
+      <label for="notes">Notes/Comments</label>
+      <textarea id="notes" name="notes" rows="2"></textarea>
+
+      <input type="submit" value="Submit Entry">
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("gerdForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const symptomCheckboxes = document.querySelectorAll('input[name="symptoms"]:checked');
+      const selectedSymptoms = Array.from(symptomCheckboxes).map(cb => cb.value);
+
+      const formData = {
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
+        mealType: document.getElementById("mealType").value,
+        food: document.getElementById("food").value,
+        fullness: document.getElementById("fullness").value,
+        symptoms: selectedSymptoms,
+        severity: document.getElementById("severity").value,
+        notes: document.getElementById("notes").value,
+      };
+
+      fetch("PASTE_YOUR_WEBAPP_URL_HERE", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => res.text())
+      .then(data => {
+        alert("Entry submitted successfully!");
+        document.getElementById("gerdForm").reset();
+      })
+      .catch(err => alert("Error: " + err));
+    });
+  </script>
+</body>
+</html>
